@@ -1,4 +1,4 @@
-# 🌱 CleanCity AI
+# 🌱 CleanCity-AI
 
 ### AI-Powered Smart Waste Management & City Cleanliness Monitoring System
 

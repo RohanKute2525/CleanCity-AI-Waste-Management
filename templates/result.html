@@ -1,0 +1,48 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detection Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+<main class="main" style="max-width:900px;margin:auto">
+  <p><a href="/dashboard">← Dashboard</a> · <a href="/scan">New scan</a></p>
+  <h1>Waste Detection Result</h1>
+
+  {% if image_url %}
+    <img class="preview" src="{{ image_url }}" alt="Uploaded waste image">
+  {% endif %}
+
+  <div class="summary">
+    <span>Class: <strong>{{ detected_class }}</strong></span>
+    <span>Confidence: <strong>{{ confidence }}%</strong></span>
+    <span>Risk estimate: <strong>{{ risk_score }}</strong></span>
+  </div>
+
+  <div class="data-box">
+    <h2>Detected objects</h2>
+    {% if detections %}
+      <table>
+        <thead><tr><th>Class</th><th>Confidence</th></tr></thead>
+        <tbody>
+        {% for item in detections %}
+          <tr>
+            <td>{{ item.class_name }}</td>
+            <td>{{ item.confidence }}%</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No waste objects were detected.</p>
+    {% endif %}
+  </div>
+
+  <p><a class="button" href="/scan">Scan another image</a></p>
+  <p class="muted">Return to the dashboard to see the updated detection count.</p>
+</main>
+</body>
+</html>

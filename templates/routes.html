@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Collection Routes | CleanCity AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f5;
+            color: #26332b;
+        }
+
+        header {
+            background: #176b45;
+            color: white;
+            padding: 22px 6%;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        nav {
+            margin-top: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 18px;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 16px;
+            background: #198754;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-secondary {
+            background: #354b40;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5ebe7;
+        }
+
+        th {
+            background: #eaf4ed;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 15px;
+            background: #e2f4e8;
+            color: #176b45;
+            font-size: 12px;
+        }
+
+        .notice {
+            background: #fff4d6;
+            border-left: 4px solid #e0a526;
+            padding: 12px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .empty {
+            padding: 18px;
+            background: #f7f9f8;
+            border-radius: 8px;
+        }
+
+        footer {
+            text-align: center;
+            color: #68756d;
+            padding: 25px;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>CleanCity AI</h1>
+    <p>Smart Waste Collection Route Optimization</p>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/scan">Scan Waste</a>
+        <a href="/bins">Smart Bins</a>
+        <a href="/hotspots">Hotspots</a>
+        <a href="/route-map">Route Map</a>
+        <a href="/route-map">Route Map</a>
+        <a href="/routes">Routes</a>
+        <a href="/complaints">Complaints</a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="card">
+        <h2>Collection Route Planner</h2>
+        <p>
+            Generate a collection order using the available smart-bin and
+            hotspot data. Review the generated route before assigning it
+            to a collection vehicle.
+        </p>
+
+        <div class="actions">
+            <form action="/optimize-route" method="POST">
+                <button class="btn" type="submit">
+                    Optimize Collection Route
+                </button>
+            </form>
+
+            <a class="btn btn-secondary" href="/dashboard">
+                Back to Dashboard
+            </a>
+        </div>
+
+        <div class="notice">
+            <strong>Note:</strong> Route optimization depends on the available
+            dataset and configured algorithm. Straight-line distance is not
+            the same as actual road distance or driving time.
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Collection Route Details</h2>
+
+        {% if routes is defined and routes %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        {% for column in routes[0].keys() %}
+                        <th>{{ column.replace('_', ' ') | title }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for route in routes %}
+                    <tr>
+                        {% for value in route.values() %}
+                        <td>
+                            {% if value is none %}
+                                -
+                            {% elif value is number %}
+                                {{ "%.2f"|format(value) }}
+                            {% else %}
+                                {{ value }}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+        <div class="empty">
+            <h3>No route data available</h3>
+            <p>
+                Check that your route CSV exists and contains the required
+                columns. Then click "Optimize Collection Route".
+            </p>
+        </div>
+        {% endif %}
+    </section>
+
+</main>
+
+<footer>
+    CleanCity AI - Intelligent Waste Management System
+</footer>
+</body>
+</html>

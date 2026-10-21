@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Hotspots | CleanCity AI</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f5;
+            color: #26332b;
+        }
+
+        header {
+            background: #176b45;
+            color: white;
+            padding: 22px 6%;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin: 22px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.05);
+        }
+
+        .number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #176b45;
+        }
+
+        .table-wrap { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5ebe7;
+        }
+
+        th { background: #eaf4ed; }
+
+        .risk {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .low { background: #d9f2e2; color: #176b45; }
+        .medium { background: #fff0c2; color: #765600; }
+        .high { background: #f8d7da; color: #842029; }
+
+        .empty {
+            padding: 18px;
+            background: #f7f9f8;
+            border-radius: 8px;
+        }
+
+        footer {
+            text-align: center;
+            color: #68756d;
+            padding: 25px;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>CleanCity AI</h1>
+    <p>Waste Hotspot Analysis</p>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/scan">Scan Waste</a>
+        <a href="/bins">Smart Bins</a>
+        <a href="/hotspots">Hotspots</a>
+        <a href="/hotspot-map">Interactive Map</a>
+        <a href="/hotspot-map">Interactive Map</a>
+        <a href="/routes">Routes</a>
+        <a href="/complaints">Complaints</a>
+    </nav>
+</header>
+
+<main class="container">
+    <h2>Hotspot Overview</h2>
+    <p>Review recorded zones and their calculated waste risk scores.</p>
+
+    <section class="cards">
+        <div class="card">
+            <h3>Total Zones</h3>
+            <div class="number">{{ total_zones | default(0) }}</div>
+        </div>
+
+        <div class="card">
+            <h3>High-Risk Hotspots</h3>
+            <div class="number">{{ hotspot_count | default(0) }}</div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Hotspot Records</h2>
+
+        {% if records is defined and records %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        {% for column in records[0].keys() %}
+                        <th>{{ column.replace('_', ' ') | title }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        {% for column, value in record.items() %}
+                        <td>
+                            {% if column == 'risk_score' and value is number %}
+                                {% if value >= 70 %}
+                                    <span class="risk high">High: {{ value }}</span>
+                                {% elif value >= 40 %}
+                                    <span class="risk medium">Medium: {{ value }}</span>
+                                {% else %}
+                                    <span class="risk low">Low: {{ value }}</span>
+                                {% endif %}
+                            {% else %}
+                                {{ value if value is not none else '-' }}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty">
+            No hotspot records are available. Check the hotspot CSV file
+            and the data-loading logic in app.py.
+        </div>
+        {% endif %}
+    </section>
+</main>
+
+<footer>
+    CleanCity AI - Intelligent Waste Management System
+</footer>
+</body>
+</html>

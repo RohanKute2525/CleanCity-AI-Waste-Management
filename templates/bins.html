@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Bin Monitoring | CleanCity AI</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f5;
+            color: #26332b;
+        }
+
+        header {
+            background: #176b45;
+            color: white;
+            padding: 22px 6%;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 16px;
+            margin: 22px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.05);
+        }
+
+        .number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #176b45;
+        }
+
+        .table-wrap { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            min-width: 650px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #e5ebe7;
+        }
+
+        th { background: #eaf4ed; }
+
+        .empty {
+            padding: 18px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        footer {
+            text-align: center;
+            color: #68756d;
+            padding: 25px;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>CleanCity AI</h1>
+    <p>Smart Bin Monitoring</p>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/scan">Scan Waste</a>
+        <a href="/bins">Smart Bins</a>
+        <a href="/hotspots">Hotspots</a>
+        <a href="/bin-map">Bin Map</a>
+        <a href="/bin-map">Bin Map</a>
+        <a href="/routes">Routes</a>
+        <a href="/complaints">Complaints</a>
+    </nav>
+</header>
+
+<main class="container">
+    <h2>Bin Status Overview</h2>
+    <p>Review bin records and their recorded fill levels.</p>
+
+    <section class="cards">
+        <div class="card">
+            <h3>Total Bins</h3>
+            <div class="number">{{ total_bins | default(0) }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Normal</h3>
+            <div class="number">{{ normal_count | default(0) }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Warning</h3>
+            <div class="number">{{ warning_count | default(0) }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Critical</h3>
+            <div class="number">{{ critical_count | default(0) }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Average Fill</h3>
+            <div class="number">{{ average_fill | default(0) }}%</div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Bin Records</h2>
+
+        {% if bins is defined and bins %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        {% for column in bins[0].keys() %}
+                        <th>{{ column.replace('_', ' ') | title }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for bin in bins %}
+                    <tr>
+                        {% for value in bin.values() %}
+                        <td>{{ value if value is not none else '-' }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty">
+            No smart-bin records are available. Check that the bin CSV file
+            exists and that the Flask route loads it correctly.
+        </div>
+        {% endif %}
+    </section>
+</main>
+
+<footer>
+    CleanCity AI - Intelligent Waste Management System
+</footer>
+</body>
+</html>

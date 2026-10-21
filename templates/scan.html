@@ -1,0 +1,37 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Waste Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+<main class="main" style="max-width:900px;margin:auto">
+  <p><a href="/dashboard">← Back to dashboard</a></p>
+  <h1>AI Waste Detection</h1>
+  <p class="muted">Upload a JPG, PNG, or WEBP image for analysis.</p>
+
+  {% for message in get_flashed_messages() %}
+    <p class="notice">{{ message }}</p>
+  {% endfor %}
+
+  <div class="form-box">
+    <p>YOLO model status:
+      <strong>{{ "Loaded" if model_loaded else "Not loaded" }}</strong>
+    </p>
+    {% if not model_loaded %}
+      <p class="notice">{{ model_error }}</p>
+    {% endif %}
+
+    <form action="/analyze" method="post" enctype="multipart/form-data">
+      <label for="image">Select waste image</label>
+      <input id="image" name="image" type="file"
+             accept=".jpg,.jpeg,.png,.webp" required>
+      <button class="button" type="submit">Detect Waste</button>
+    </form>
+  </div>
+</main>
+</body>
+</html>

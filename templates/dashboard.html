@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CleanCity AI Dashboard</title>
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <h2>♻ CleanCity AI</h2>
+    <p class="subtitle">Smart Waste Management</p>
+    <nav>
+      <a class="active" href="/dashboard">▦ Dashboard</a>
+      <a href="/scan">⌕ Waste Detection</a>
+      <a href="/bins">▤ Smart Bins</a>
+      <a href="/hotspots">⌖ Waste Hotspots</a>
+      <a href="/hotspot-map">◎ Hotspot Map</a>
+      <a href="/bin-map">♧ Bin Map</a>
+      <a href="/route-map">➜ Route Map</a>
+      <a href="/detection-history">◷ Detection History</a>
+      <a href="/routes">➜ Collection Routes</a>
+      <a href="/complaints">☷ Complaints</a>
+      <a href="/report">▧ Reports</a>
+      <a href="/health">♡ Model Health</a>
+      <a href="/data-status">▤ Dataset Status</a>
+	  
+     <a href="{{ url_for('optimize_route') }}">
+        Optimize Collection Route
+     </a>
+
+    </nav>
+    <p class="sidebar-note">Auto-refresh every 5 seconds</p>
+  </aside>
+
+  <main class="main">
+    <header class="header">
+      <div>
+        <p class="eyebrow">CITY OPERATIONS / OVERVIEW</p>
+        <h1>Waste Intelligence Dashboard</h1>
+        <p class="muted">Monitor AI scans, bins, hotspots and collection activity.</p>
+      </div>
+      <div class="header-actions">
+        <span id="connection" class="pill">Connecting...</span>
+        <button id="refreshBtn" class="button">↻ Refresh</button>
+      </div>
+    </header>
+
+    <section class="welcome">
+      <div>
+        <h3>Clean city. Smarter decisions.</h3>
+        <p>Statistics are loaded from your project CSV files.</p>
+      </div>
+      <div class="model-pills">
+        <span id="yoloStatus">YOLO: checking</span>
+        <span id="hotspotStatus">Hotspot model: checking</span>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <span>Total detections</span>
+        <strong id="total_detections">—</strong>
+        <small>Saved image predictions</small>
+      </article>
+      <article class="stat-card">
+        <span>Smart bins</span>
+        <strong id="total_bins">—</strong>
+        <small>Registered bins</small>
+      </article>
+      <article class="stat-card">
+        <span>Critical bins</span>
+        <strong id="critical_bins">—</strong>
+        <small>Fill level 80% or more</small>
+      </article>
+      <article class="stat-card">
+        <span>High-risk hotspots</span>
+        <strong id="high_risk_hotspots">—</strong>
+        <small>Risk score 70 or more</small>
+      </article>
+      <article class="stat-card">
+        <span>Complaints</span>
+        <strong id="total_complaints">—</strong>
+        <small>Submitted reports</small>
+      </article>
+      <article class="stat-card">
+        <span>Route stops</span>
+        <strong id="route_stops">—</strong>
+        <small>Rows in route dataset</small>
+      </article>
+    </section>
+
+    <section class="panels">
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Detections by waste class</h2>
+            <p>Calculated from saved detection history</p>
+          </div>
+          <span class="tag">LIVE DATA</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="wasteChart"></canvas>
+          <p id="chartEmpty" class="empty" hidden>
+            No class data found. Upload an image to start.
+          </p>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>System health</h2>
+        <p class="panel-description">Model and dataset status</p>
+        <div class="health-row">
+          <span>YOLO model</span><b id="healthYolo">Checking</b>
+        </div>
+        <div class="health-row">
+          <span>Hotspot model</span><b id="healthHotspot">Checking</b>
+        </div>
+        <div class="health-row">
+          <span>Zones monitored</span><b id="total_zones">—</b>
+        </div>
+        <div class="health-row">
+          <span>Last updated</span><b id="last_updated">—</b>
+        </div>
+        <div class="tip">
+          Upload a new image using <a href="/scan">Waste Detection</a>.
+          Successful predictions are saved to your CSV history.
+        </div>
+      </article>
+    </section>
+
+    <section class="panels lower-panels">
+      <article class="panel">
+        <div class="panel-heading">
+          <div><h2>Recent detections</h2><p>Latest saved predictions</p></div>
+          <a href="/scan">New scan →</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Time</th><th>Class</th><th>Confidence</th></tr></thead>
+            <tbody id="detectionsTable">
+              <tr><td colspan="3">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-heading">
+          <div><h2>Recent complaints</h2><p>Latest submitted reports</p></div>
+          <a href="/complaints">View all →</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Zone</th><th>Category</th><th>Status</th></tr></thead>
+            <tbody id="complaintsTable">
+              <tr><td colspan="3">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      CleanCity AI · <span id="footerTime">Waiting for data...</span>
+    </footer>
+  </main>
+</div>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

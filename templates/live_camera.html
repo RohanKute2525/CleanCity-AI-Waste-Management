@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Camera | CleanCity AI</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f5;
+            color: #26332b;
+        }
+
+        header {
+            background: #176b45;
+            color: white;
+            padding: 22px 6%;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.06);
+        }
+
+        .camera-box {
+            background: #17251d;
+            border-radius: 10px;
+            min-height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        #cameraFeed {
+            width: 100%;
+            height: auto;
+            display: none;
+        }
+
+        #placeholder {
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            font-size: 14px;
+        }
+
+        #startBtn { background: #198754; }
+        #stopBtn { background: #b02a37; }
+
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        #status {
+            padding: 12px;
+            border-radius: 6px;
+            background: #eaf4ed;
+            margin-top: 16px;
+        }
+
+        .note {
+            color: #68756d;
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            color: #68756d;
+            padding: 25px;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>CleanCity AI</h1>
+    <p>Live Camera Waste Detection</p>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/scan">Scan Waste</a>
+        <a href="/live-camera">Live Camera</a>
+        <a href="/bins">Smart Bins</a>
+        <a href="/hotspots">Hotspots</a>
+        <a href="/routes">Routes</a>
+    </nav>
+</header>
+
+<main class="container">
+    <section class="card">
+        <h2>Live Detection</h2>
+
+        <p>
+            Start the camera to view the video feed. Detection requires
+            a compatible camera, OpenCV, and an available YOLO model.
+        </p>
+
+        <div class="camera-box">
+            <div id="placeholder">
+                <h3>Camera is stopped</h3>
+                <p>Click Start Camera to request the video feed.</p>
+            </div>
+
+            <img id="cameraFeed" alt="Live camera detection feed">
+        </div>
+
+        <div class="actions">
+            <button type="button" id="startBtn">Start Camera</button>
+            <button type="button" id="stopBtn" disabled>Stop Camera</button>
+        </div>
+
+        <div id="status" role="status" aria-live="polite">
+            Status: Camera stopped.
+        </div>
+
+        <p class="note">
+            If the feed does not start, check that the webcam is connected,
+            available to Python, and not being used by another application.
+            The server must expose the /video_feed endpoint.
+        </p>
+    </section>
+</main>
+
+<footer>
+    CleanCity AI - Intelligent Waste Management System
+</footer>
+
+<script>
+    const feed = document.getElementById("cameraFeed");
+    const placeholder = document.getElementById("placeholder");
+    const statusBox = document.getElementById("status");
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+
+    let running = false;
+
+    startBtn.addEventListener("click", function () {
+        if (running) return;
+
+        statusBox.textContent = "Status: Connecting to camera...";
+        startBtn.disabled = true;
+
+        feed.onload = function () {
+            running = true;
+            feed.style.display = "block";
+            placeholder.style.display = "none";
+            stopBtn.disabled = false;
+            startBtn.disabled = false;
+            statusBox.textContent = "Status: Camera feed connected.";
+        };
+
+        feed.onerror = function () {
+            running = false;
+            feed.style.display = "none";
+            placeholder.style.display = "block";
+            stopBtn.disabled = true;
+            startBtn.disabled = false;
+            statusBox.textContent =
+                "Status: Could not load feed. Check the Flask server, webcam, and YOLO model.";
+        };
+
+        feed.src = "/video_feed?t=" + Date.now();
+    });
+
+    stopBtn.addEventListener("click", async function () {
+        running = false;
+        feed.onload = null;
+        feed.onerror = null;
+        feed.removeAttribute("src");
+        feed.style.display = "none";
+        placeholder.style.display = "block";
+        stopBtn.disabled = true;
+        startBtn.disabled = false;
+        statusBox.textContent = "Status: Camera stopped.";
+
+        try {
+            await fetch("/stop-camera", { method: "POST" });
+        } catch (error) {
+            statusBox.textContent =
+                "Status: Feed hidden. Check the server if the camera remains active.";
+        }
+    });
+</script>
+</body>
+</html>

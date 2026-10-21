@@ -1,0 +1,67 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Complaints | CleanCity AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+<main class="main" style="max-width:1000px;margin:auto">
+  <p><a href="/dashboard">← Back to dashboard</a></p>
+  <h1>Waste Collection Complaints</h1>
+
+  {% if message %}
+    <p class="notice">{{ message }}</p>
+  {% endif %}
+
+  <div class="form-box">
+    <form method="post">
+      <label for="name">Name *</label>
+      <input id="name" name="name" required>
+
+      <label for="zone">Zone or area *</label>
+      <input id="zone" name="zone" required>
+
+      <label for="category">Category</label>
+      <select id="category" name="category">
+        <option>Overflowing bin</option>
+        <option>Missed collection</option>
+        <option>Illegal dumping</option>
+        <option>General</option>
+      </select>
+
+      <label for="description">Description *</label>
+      <textarea id="description" name="description"
+                rows="4" required></textarea>
+
+      <button class="button" type="submit">Submit Complaint</button>
+    </form>
+  </div>
+
+  <div class="data-box">
+    <h2>Previous complaints</h2>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr><th>Zone</th><th>Category</th><th>Status</th><th>Created</th></tr>
+        </thead>
+        <tbody>
+          {% for row in complaints|reverse %}
+            <tr>
+              <td>{{ row.get("zone", "") }}</td>
+              <td>{{ row.get("category", "") }}</td>
+              <td>{{ row.get("status", "") }}</td>
+              <td>{{ row.get("created_at", "") }}</td>
+            </tr>
+          {% else %}
+            <tr><td colspan="4">No complaints submitted yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+</body>
+</html>

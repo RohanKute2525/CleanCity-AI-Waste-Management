@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Status | CleanCity AI</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7f5;
+            color: #26352c;
+            margin: 0;
+            padding: 25px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #176b45;
+        }
+
+        .panel {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 13px;
+            border-bottom: 1px solid #e3ebe5;
+        }
+
+        th {
+            background: #edf6f0;
+        }
+
+        .ok {
+            color: #176b45;
+            font-weight: bold;
+        }
+
+        .missing {
+            color: #bd3434;
+            font-weight: bold;
+        }
+
+        a {
+            color: #176b45;
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <h1>🌿 CleanCity AI — Dataset Status</h1>
+    <p>Check whether each registered CSV dataset is available.</p>
+
+    <section class="panel">
+        <table>
+            <thead>
+                <tr>
+                    <th>Dataset</th>
+                    <th>Status</th>
+                    <th>File Path</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for name, details in datasets.items() %}
+                <tr>
+                    <td>{{ name | title }}</td>
+                    <td>
+                        {% if details.exists %}
+                            <span class="ok">Available</span>
+                        {% else %}
+                            <span class="missing">Missing</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ details.path or "Not found" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <p><a href="/dashboard">← Return to Dashboard</a></p>
+</main>
+</body>
+</html>

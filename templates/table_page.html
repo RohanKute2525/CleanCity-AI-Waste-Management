@@ -1,0 +1,49 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page_title }} | CleanCity AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+<main class="main" style="max-width:1200px;margin:auto">
+  <p><a href="/dashboard">← Back to dashboard</a></p>
+  <h1>{{ page_title }}</h1>
+
+  <div class="summary">
+    {% for key, value in summary.items() %}
+      <span>{{ key }}: <strong>{{ value }}</strong></span>
+    {% endfor %}
+  </div>
+
+  <div class="data-box" style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          {% for column in columns %}
+            <th>{{ column }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            {% for column in columns %}
+              <td>{{ row.get(column, "") }}</td>
+            {% endfor %}
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="{{ columns|length if columns else 1 }}">
+              No records available. Check your CSV files in the data folder.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

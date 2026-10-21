@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CleanCity AI | Smart Waste Management</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f8f6;
+            color: #24372c;
+        }
+
+        header {
+            background: #176b45;
+            color: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .brand {
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .hero {
+            padding: 75px 7%;
+            background: linear-gradient(135deg, #e2f3e8, #f5f8f6);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 52px);
+            margin: 0 0 18px;
+            color: #176b45;
+        }
+
+        .hero p {
+            max-width: 720px;
+            margin: 0 auto 28px;
+            font-size: 17px;
+            line-height: 1.7;
+            color: #526459;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 20px;
+            margin: 5px;
+            background: #198754;
+            color: white;
+            border-radius: 7px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-secondary {
+            background: #354b40;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .feature {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.05);
+        }
+
+        .feature .icon {
+            font-size: 32px;
+        }
+
+        .feature h3 {
+            color: #176b45;
+        }
+
+        .feature p {
+            color: #617066;
+            line-height: 1.6;
+        }
+
+        .feature a {
+            color: #176b45;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .workflow {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            line-height: 2;
+        }
+
+        footer {
+            margin-top: 45px;
+            background: #173e2c;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        @media (max-width: 650px) {
+            header { justify-content: center; }
+            nav { justify-content: center; }
+            .hero { padding: 50px 20px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="brand">CleanCity AI</div>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/scan">Scan Waste</a>
+        <a href="/bins">Smart Bins</a>
+        <a href="/hotspots">Hotspots</a>
+        <a href="/routes">Routes</a>
+        <a href="/complaints">Complaints</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <h1>Building Cleaner Cities with AI</h1>
+
+    <p>
+        CleanCity AI is a smart waste management project designed to
+        demonstrate waste image detection, bin monitoring, waste hotspot
+        analysis, complaint tracking, and collection route planning.
+    </p>
+
+    <a class="btn" href="/dashboard">Open Dashboard</a>
+    <a class="btn btn-secondary" href="/scan">Scan Waste Image</a>
+</section>
+
+<main class="container">
+
+    <section>
+        <div class="section-title">
+            <h2>Explore the Platform</h2>
+            <p>Access the main features of the CleanCity AI system.</p>
+        </div>
+
+        <div class="features">
+
+            <article class="feature">
+                <div class="icon">&#128247;</div>
+                <h3>AI Waste Detection</h3>
+                <p>
+                    Upload an image to check whether the configured
+                    object detection model identifies waste.
+                </p>
+                <a href="/scan">Scan an Image &rarr;</a>
+            </article>
+
+            <article class="feature">
+                <div class="icon">&#128203;</div>
+                <h3>Smart Bin Monitoring</h3>
+                <p>
+                    Review available bin records and identify bins
+                    that may require collection.
+                </p>
+                <a href="/bins">View Smart Bins &rarr;</a>
+            </article>
+
+            <article class="feature">
+                <div class="icon">&#128205;</div>
+                <h3>Waste Hotspots</h3>
+                <p>
+                    Explore recorded hotspot zones and their risk
+                    scores using the available dataset.
+                </p>
+                <a href="/hotspots">View Hotspots &rarr;</a>
+            </article>
+
+            <article class="feature">
+                <div class="icon">&#128667;</div>
+                <h3>Route Optimization</h3>
+                <p>
+                    Generate a proposed collection order from the
+                    available bin and hotspot data.
+                </p>
+                <a href="/routes">Plan a Route &rarr;</a>
+            </article>
+
+            <article class="feature">
+                <div class="icon">&#128221;</div>
+                <h3>Complaint Management</h3>
+                <p>
+                    Submit waste-related complaints and review
+                    recorded reports.
+                </p>
+                <a href="/complaints">Report an Issue &rarr;</a>
+            </article>
+
+            <article class="feature">
+                <div class="icon">&#128202;</div>
+                <h3>Reports</h3>
+                <p>
+                    Review available waste management records and
+                    print a summary report.
+                </p>
+                <a href="/report">View Report &rarr;</a>
+            </article>
+
+        </div>
+    </section>
+
+    <section style="margin-top: 40px;">
+        <div class="section-title">
+            <h2>How It Works</h2>
+        </div>
+
+        <div class="workflow">
+            <strong>Step 1:</strong> Upload waste images or load available data.<br>
+            <strong>Step 2:</strong> Run the configured detection and analysis tools.<br>
+            <strong>Step 3:</strong> Review bin records and potential hotspots.<br>
+            <strong>Step 4:</strong> Generate a proposed collection route.<br>
+            <strong>Step 5:</strong> Review reports and submitted complaints.
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <strong>CleanCity AI</strong>
+    <p>AI-Assisted Smart Waste Management System</p>
+</footer>
+
+<section style="padding:18px"><h3>New Modules</h3><a href="/hotspot-map">Hotspot Map</a> · <a href="/bin-map">Smart Bin Map</a> · <a href="/route-map">Route Map</a> · <a href="/detection-history">Detection History</a></section></body>
+</html>
